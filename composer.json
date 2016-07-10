@@ -1,7 +1,7 @@
 {
     "name": "def/view-twig-adapter",
     "type": "library",
-    "homepage": "https://github.com/andrew-kamenchuk/def-view",
+    "homepage": "https://github.com/andrew-kamenchuk/def-view-twig-adapter",
     "description": "twig adapter for def/view package",
     "license": "MIT",
     "authors": [

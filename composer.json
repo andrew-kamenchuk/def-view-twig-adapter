@@ -1,0 +1,23 @@
+{
+    "name": "def/view-twig-adapter",
+    "type": "library",
+    "homepage": "https://github.com/andrew-kamenchuk/def-view",
+    "description": "twig adapter for def/view package",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "andrew-kamenchuk",
+            "email": "andrew.kamenchuk@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.6",
+        "twig/twig": "^1.24",
+        "def/view": "dev-master"
+    },
+    "autoload": {
+      "psr-4" : {
+        "def\\View\\Adapter\\Twig\\":""
+      }
+    }
+}

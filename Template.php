@@ -20,6 +20,11 @@ class Template extends View
         });
     }
 
+    public function render($template, array $data = [])
+    {
+        return $this->twig()->render($template, array_merge($this->data, $data));
+    }
+
     public function configure(callable $configure)
     {
         $this->configs[] = $configure;

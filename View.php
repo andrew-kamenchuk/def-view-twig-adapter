@@ -24,7 +24,7 @@ class View extends \def\View\View
         return $this->twig()->render($template, array_merge($this->data(), $data));
     }
 
-    public function renderString($string, array $data)
+    public function renderString($string, array $data = [])
     {
         return $this->twig()->createTemplate($string)->render(array_merge($this->data(), $data));
     }

@@ -1,11 +1,10 @@
 <?php
 namespace def\View\Adapter\Twig;
 
-use def\View\View;
 use Twig_Environment as Twig;
 use Twig_Loader_Filesystem as Loader;
 
-class Template extends View
+class View extends \def\View\View
 {
     private $configs = [];
 
@@ -22,7 +21,12 @@ class Template extends View
 
     public function render($template, array $data = [])
     {
-        return $this->twig()->render($template, array_merge($this->data, $data));
+        return $this->twig()->render($template, array_merge($this->data(), $data));
+    }
+
+    public function renderString($string, array $data)
+    {
+        return $this->twig()->createTemplate($string)->render(array_merge($this->data(), $data));
     }
 
     public function configure(callable $configure)
@@ -32,13 +36,15 @@ class Template extends View
 
     public function twig()
     {
-        $twig = isset($this->twig) ? $this->twig : $this->twig = new Twig(new Loader);
-
-        while (null !== $configure = \array_shift($this->configs)) {
-            $configure($twig);
+        if (!isset($this->twig)) {
+            $this->twig = new Twig(new Loader);
         }
 
-        return $twig;
+        while (null !== $configure = array_shift($this->configs)) {
+            $configure($this->twig);
+        }
+
+        return $this->twig;
     }
 
     public function template($template)
@@ -48,16 +54,29 @@ class Template extends View
 
     public function addPath($path, $namespace = Loader::MAIN_NAMESPACE)
     {
-        $this->configure(function (Twig $twig) use ($path, $namespace) {
+        return $this->configure(function (Twig $twig) use ($path, $namespace) {
             $twig->getLoader()->addPath($path, $namespace);
         });
     }
 
     public function prependPath($path, $namespace = Loader::MAIN_NAMESPACE)
     {
-        $this->configure(function (Twig $twig) use ($path, $namespace) {
+        return $this->configure(function (Twig $twig) use ($path, $namespace) {
             $twig->getLoader()->prependPath($path, $namespace);
         });
+    }
+
+    public function assignGlobal($key, $value, callable ...$filters)
+    {
+        foreach ($filters as $filter) {
+            $value = $filter($value);
+        }
+
+        $this->configure(function (Twig $twig) use ($key, $value) {
+            $twig->addGlobal($key, $value);
+        });
+
+        return parent::assign($key, $value);
     }
 
     public function setCache($cache, $autoreload = false)
